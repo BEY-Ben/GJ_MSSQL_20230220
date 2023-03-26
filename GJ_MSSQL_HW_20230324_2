@@ -1,0 +1,10 @@
+/*
+MSSQL
+家庭作業2：各職位中的女生人數
+*/
+SELECT * FROM 員工
+
+SELECT 職稱,稱呼,COUNT(*) AS 人數
+FROM 員工
+GROUP BY 職稱,稱呼
+ORDER BY 職稱
