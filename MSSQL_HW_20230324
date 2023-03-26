@@ -1,0 +1,30 @@
+/*
+MSSQL
+家庭作業1：2004年未賣出的產品
+*/
+--解法:
+--先確認使用環境及資料表內容
+USE 中文北風
+SELECT * FROM 員工
+SELECT * FROM 訂貨主檔
+SELECT * FROM 訂貨明細
+SELECT * FROM 產品資料
+
+--先將查詢結果匯出成一張表
+SELECT A.訂單號碼,A.訂單日期,B.訂單號碼 AS 訂單號 ,B.產品編號,C.產品編號 AS 產品對照碼,C.產品
+INTO 訂單彙表
+FROM 訂貨主檔 AS A
+	JOIN 訂貨明細 AS B ON A.訂單號碼 = B.訂單號碼
+	JOIN 產品資料 AS C ON B.產品編號 = C.產品編號
+WHERE A.訂單日期>='2004-01-01'
+
+--確認新表內容
+SELECT * FROM 訂單彙表
+
+--以NOT IN比對查詢
+SELECT * FROM 產品資料
+	WHERE 產品 NOT IN (SELECT 產品 FROM 訂單彙表);
+
+--以NOT EXISTS比對查詢
+SELECT * FROM 產品資料
+	WHERE NOT EXISTS (SELECT * FROM 訂單彙表 WHERE 產品 = 產品資料.產品)
