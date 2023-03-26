@@ -1,0 +1,28 @@
+/*
+MSSQL
+家庭作業3：列出各產品類別中高於該類產品均價的產品
+*/
+--先確認使用環境及資料表內容
+SELECT * FROM 產品類別
+SELECT * FROM 產品資料
+ORDER BY 類別編號
+
+--各類別總價
+SELECT 類別編號,SUM(單價) AS 總價
+FROM 產品資料
+GROUP BY 類別編號
+
+--各類別均價，並產出新的表
+SELECT 類別編號,AVG(單價) AS 均價
+INTO 產品均價表
+FROM 產品資料
+GROUP BY 類別編號
+
+--確認新的表內容
+SELECT * FROM  產品均價表
+
+--比對產品資料與均價表，查出各類別中，單價高於均價的產品
+SELECT B.產品,B.類別編號,B.單價,A.均價
+FROM 產品均價表 AS A 
+	JOIN 產品資料 AS B ON A.類別編號 = B.類別編號
+WHERE 單價>均價
